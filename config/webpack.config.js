@@ -129,9 +129,7 @@ module.exports = function(webpackEnv) {
 
   const pkg = require(paths.appPackageJson);
   const useAntd = pkg.dependencies.hasOwnProperty('antd');
-  const useLodash =
-    pkg.dependencies.hasOwnProperty('lodash') &&
-    pkg.devDependencies.hasOwnProperty('babel-plugin-lodash');
+  const useLodash = pkg.devDependencies.hasOwnProperty('babel-plugin-lodash');
 
   return {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
@@ -396,7 +394,7 @@ module.exports = function(webpackEnv) {
                     },
                   ],
                   useAntd && [
-                    'import',
+                    require.resolve('babel-plugin-import'),
                     {
                       libraryName: 'antd',
                       libraryDirectory: 'es',
@@ -404,7 +402,7 @@ module.exports = function(webpackEnv) {
                       style: 'css',
                     },
                   ],
-                  useLodash && 'lodash',
+                  useLodash && require.resolve('babel-plugin-lodash'),
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
