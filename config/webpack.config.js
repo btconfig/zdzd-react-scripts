@@ -134,7 +134,7 @@ module.exports = function (webpackEnv) {
   );
   const useLodash = Object.prototype.hasOwnProperty.call(
     pkg.dependencies,
-    'babel-plugin-lodash'
+    'lodash'
   );
 
   const sourceMap = shouldUseSourceMap ? 'source-map' : false;
