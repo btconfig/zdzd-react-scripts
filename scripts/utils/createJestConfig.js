@@ -18,17 +18,17 @@ module.exports = (resolve, rootDir, isEjecting) => {
   const setupTestsMatches = paths.testsSetup.match(/src[/\\]setupTests\.(.+)/);
   const setupTestsFileExtension =
     (setupTestsMatches && setupTestsMatches[1]) || 'js';
-  const setupTestsFile = fs.existsSync(paths.testsSetup)
-    ? `<rootDir>/src/setupTests.${setupTestsFileExtension}`
-    : undefined;
+  const setupTestsFile = fs.existsSync(paths.testsSetup) ?
+    `<rootDir>/src/setupTests.${setupTestsFileExtension}` :
+    undefined;
 
   const config = {
     collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/*.d.ts'],
 
     setupFiles: [
-      isEjecting
-        ? 'react-app-polyfill/jsdom'
-        : require.resolve('react-app-polyfill/jsdom'),
+      isEjecting ?
+        'react-app-polyfill/jsdom' :
+        require.resolve('react-app-polyfill/jsdom'),
     ],
 
     setupFilesAfterEnv: setupTestsFile ? [setupTestsFile] : [],
@@ -38,13 +38,11 @@ module.exports = (resolve, rootDir, isEjecting) => {
     ],
     testEnvironment: 'jest-environment-jsdom-fourteen',
     transform: {
-      '^.+\\.(js|jsx|ts|tsx)$': isEjecting
-        ? '<rootDir>/node_modules/babel-jest'
-        : resolve('config/jest/babelTransform.js'),
+      '^.+\\.(js|jsx|ts|tsx)$': isEjecting ?
+        '<rootDir>/node_modules/babel-jest' :
+        resolve('config/jest/babelTransform.js'),
       '^.+\\.css$': resolve('config/jest/cssTransform.js'),
-      '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': resolve(
-        'config/jest/fileTransform.js'
-      ),
+      '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': resolve('config/jest/fileTransform.js'),
     },
     transformIgnorePatterns: [
       '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$',
@@ -55,9 +53,7 @@ module.exports = (resolve, rootDir, isEjecting) => {
       '^react-native$': 'react-native-web',
       '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     },
-    moduleFileExtensions: [...paths.moduleFileExtensions, 'node'].filter(
-      ext => !ext.includes('mjs')
-    ),
+    moduleFileExtensions: [...paths.moduleFileExtensions, 'node'].filter(ext => !ext.includes('mjs')),
     watchPlugins: [
       'jest-watch-typeahead/filename',
       'jest-watch-typeahead/testname',
@@ -80,8 +76,8 @@ module.exports = (resolve, rootDir, isEjecting) => {
     'watchPathIgnorePatterns',
   ];
   if (overrides) {
-    supportedKeys.forEach(key => {
-      if (overrides.hasOwnProperty(key)) {
+    supportedKeys.forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(overrides, key)) {
         config[key] = overrides[key];
         delete overrides[key];
       }
@@ -92,38 +88,20 @@ module.exports = (resolve, rootDir, isEjecting) => {
         unsupportedKeys.indexOf('setupFilesAfterEnv') > -1;
 
       if (isOverridingSetupFile) {
-        console.error(
-          chalk.red(
-            'We detected ' +
-              chalk.bold('setupFilesAfterEnv') +
-              ' in your package.json.\n\n' +
-              'Remove it from Jest configuration, and put the initialization code in ' +
-              chalk.bold('src/setupTests.js') +
-              '.\nThis file will be loaded automatically.\n'
-          )
-        );
+        console.error(chalk.red(`We detected ${chalk.bold('setupFilesAfterEnv')} in your package.json.\n\n` +
+              `Remove it from Jest configuration, and put the initialization code in ${chalk.bold('src/setupTests.js')}.\nThis file will be loaded automatically.\n`));
       } else {
-        console.error(
-          chalk.red(
-            '\nOut of the box, Create React App only supports overriding ' +
-              'these Jest options:\n\n' +
-              supportedKeys
-                .map(key => chalk.bold('  \u2022 ' + key))
-                .join('\n') +
-              '.\n\n' +
+        console.error(chalk.red(`${'\nOut of the box, Create React App only supports overriding ' +
+              'these Jest options:\n\n'}${supportedKeys
+          .map(key => chalk.bold(`  \u2022 ${key}`))
+          .join('\n')}.\n\n` +
               'These options in your package.json Jest configuration ' +
-              'are not currently supported by Create React App:\n\n' +
-              unsupportedKeys
-                .map(key => chalk.bold('  \u2022 ' + key))
-                .join('\n') +
-              '\n\nIf you wish to override other Jest options, you need to ' +
-              'eject from the default setup. You can do so by running ' +
-              chalk.bold('npm run eject') +
-              ' but remember that this is a one-way operation. ' +
+              `are not currently supported by Create React App:\n\n${unsupportedKeys
+                .map(key => chalk.bold(`  \u2022 ${key}`))
+                .join('\n')}\n\nIf you wish to override other Jest options, you need to ` +
+              `eject from the default setup. You can do so by running ${chalk.bold('npm run eject')} but remember that this is a one-way operation. ` +
               'You may also file an issue with Create React App to discuss ' +
-              'supporting more options out of the box.\n'
-          )
-        );
+              'supporting more options out of the box.\n'));
       }
 
       process.exit(1);

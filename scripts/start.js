@@ -15,7 +15,7 @@ process.env.NODE_ENV = 'development';
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
@@ -61,19 +61,9 @@ const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
 if (process.env.HOST) {
-  console.log(
-    chalk.cyan(
-      `Attempting to bind to HOST environment variable: ${chalk.yellow(
-        chalk.bold(process.env.HOST)
-      )}`
-    )
-  );
-  console.log(
-    `If this was unintentional, check that you haven't mistakenly set it in your shell.`
-  );
-  console.log(
-    `Learn more here: ${chalk.yellow('https://bit.ly/CRA-advanced-config')}`
-  );
+  console.log(chalk.cyan(`Attempting to bind to HOST environment variable: ${chalk.yellow(chalk.bold(process.env.HOST))}`));
+  console.log('If this was unintentional, check that you haven\'t mistakenly set it in your shell.');
+  console.log(`Learn more here: ${chalk.yellow('https://bit.ly/CRA-advanced-config')}`);
   console.log();
 }
 
@@ -86,7 +76,7 @@ checkBrowsers(paths.appPath, isInteractive)
     // run on a different port. `choosePort()` Promise resolves to the next free port.
     return choosePort(HOST, DEFAULT_PORT);
   })
-  .then(port => {
+  .then((port) => {
     if (port == null) {
       // We have not found a port.
       return;
@@ -97,10 +87,8 @@ checkBrowsers(paths.appPath, isInteractive)
     const useTypeScript = fs.existsSync(paths.appTsConfig);
     const urls = prepareUrls(protocol, HOST, port);
     const devSocket = {
-      warnings: warnings =>
-        devServer.sockWrite(devServer.sockets, 'warnings', warnings),
-      errors: errors =>
-        devServer.sockWrite(devServer.sockets, 'errors', errors),
+      warnings: warnings => devServer.sockWrite(devServer.sockets, 'warnings', warnings),
+      errors: errors => devServer.sockWrite(devServer.sockets, 'errors', errors),
     };
     // Create a webpack compiler that is configured with custom messages.
     const compiler = createCompiler({
@@ -122,7 +110,7 @@ checkBrowsers(paths.appPath, isInteractive)
     );
     const devServer = new WebpackDevServer(compiler, serverConfig);
     // Launch WebpackDevServer.
-    devServer.listen(port, HOST, err => {
+    devServer.listen(port, HOST, (err) => {
       if (err) {
         return console.log(err);
       }
@@ -134,11 +122,7 @@ checkBrowsers(paths.appPath, isInteractive)
       // This now has been deprecated in favor of jsconfig/tsconfig.json
       // This lets you use absolute paths in imports inside large monorepos:
       if (process.env.NODE_PATH) {
-        console.log(
-          chalk.yellow(
-            'Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'
-          )
-        );
+        console.log(chalk.yellow('Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'));
         console.log();
       }
 
@@ -146,14 +130,14 @@ checkBrowsers(paths.appPath, isInteractive)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
-      process.on(sig, function() {
+    ['SIGINT', 'SIGTERM'].forEach((sig) => {
+      process.on(sig, () => {
         devServer.close();
         process.exit();
       });
     });
   })
-  .catch(err => {
+  .catch((err) => {
     if (err && err.message) {
       console.log(err.message);
     }

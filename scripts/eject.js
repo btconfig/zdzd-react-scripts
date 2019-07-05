@@ -10,13 +10,13 @@
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
 const fs = require('fs-extra');
 const path = require('path');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 const chalk = require('react-dev-utils/chalk');
 const paths = require('../config/paths');
 const createJestConfig = require('./utils/createJestConfig');
@@ -24,12 +24,12 @@ const inquirer = require('react-dev-utils/inquirer');
 const spawnSync = require('react-dev-utils/crossSpawn').sync;
 const os = require('os');
 
-const green = chalk.green;
-const cyan = chalk.cyan;
+const { green } = chalk;
+const { cyan } = chalk;
 
-function getGitStatus() {
+function getGitStatus () {
   try {
-    let stdout = execSync(`git status --porcelain`, {
+    const stdout = execSync('git status --porcelain', {
       stdio: ['pipe', 'pipe', 'ignore'],
     }).toString();
     return stdout.trim();
@@ -38,7 +38,7 @@ function getGitStatus() {
   }
 }
 
-function tryGitAdd(appPath) {
+function tryGitAdd (appPath) {
   try {
     spawnSync(
       'git',
@@ -54,12 +54,8 @@ function tryGitAdd(appPath) {
   }
 }
 
-console.log(
-  chalk.cyan.bold(
-    'NOTE: Create React App 2+ supports TypeScript, Sass, CSS Modules and more without ejecting: ' +
-      'https://reactjs.org/blog/2018/10/01/create-react-app-v2.html'
-  )
-);
+console.log(chalk.cyan.bold('NOTE: Create React App 2+ supports TypeScript, Sass, CSS Modules and more without ejecting: ' +
+      'https://reactjs.org/blog/2018/10/01/create-react-app-v2.html'));
 console.log();
 
 inquirer
@@ -69,7 +65,7 @@ inquirer
     message: 'Are you sure you want to eject? This action is permanent.',
     default: false,
   })
-  .then(answer => {
+  .then((answer) => {
     if (!answer.shouldEject) {
       console.log(cyan('Close one! Eject aborted.'));
       return;
@@ -77,36 +73,24 @@ inquirer
 
     const gitStatus = getGitStatus();
     if (gitStatus) {
-      console.error(
-        chalk.red(
-          'This git repository has untracked files or uncommitted changes:'
-        ) +
-          '\n\n' +
-          gitStatus
-            .split('\n')
-            .map(line => line.match(/ .*/g)[0].trim())
-            .join('\n') +
-          '\n\n' +
-          chalk.red(
-            'Remove untracked files, stash or commit any changes, and try again.'
-          )
-      );
+      console.error(`${chalk.red('This git repository has untracked files or uncommitted changes:')}\n\n${gitStatus
+        .split('\n')
+        .map(line => line.match(/ .*/g)[0].trim())
+        .join('\n')}\n\n${chalk.red('Remove untracked files, stash or commit any changes, and try again.')}`);
       process.exit(1);
     }
 
     console.log('Ejecting...');
 
-    const ownPath = paths.ownPath;
-    const appPath = paths.appPath;
+    const { ownPath } = paths;
+    const { appPath } = paths;
 
-    function verifyAbsent(file) {
+    function verifyAbsent (file) {
       if (fs.existsSync(path.join(appPath, file))) {
-        console.error(
-          `\`${file}\` already exists in your app folder. We cannot ` +
+        console.error(`\`${file}\` already exists in your app folder. We cannot ` +
             'continue as you would lose all the changes in that file or directory. ' +
             'Please move or delete it (maybe make a copy for backup) and run this ' +
-            'command again.'
-        );
+            'command again.');
         process.exit(1);
       }
     }
@@ -115,14 +99,12 @@ inquirer
 
     // Make shallow array of files paths
     const files = folders.reduce((files, folder) => {
-      return files.concat(
-        fs
-          .readdirSync(path.join(ownPath, folder))
-          // set full path
-          .map(file => path.join(ownPath, folder, file))
-          // omit dirs from file list
-          .filter(file => fs.lstatSync(file).isFile())
-      );
+      return files.concat(fs
+        .readdirSync(path.join(ownPath, folder))
+      // set full path
+        .map(file => path.join(ownPath, folder, file))
+      // omit dirs from file list
+        .filter(file => fs.lstatSync(file).isFile()));
     }, []);
 
     // Ensure that the app folder is clean and we won't override any files
@@ -139,30 +121,29 @@ inquirer
     console.log();
     console.log(cyan(`Copying files into ${appPath}`));
 
-    folders.forEach(folder => {
+    folders.forEach((folder) => {
       fs.mkdirSync(path.join(appPath, folder));
     });
 
-    files.forEach(file => {
+    files.forEach((file) => {
       let content = fs.readFileSync(file, 'utf8');
 
       // Skip flagged files
       if (content.match(/\/\/ @remove-file-on-eject/)) {
         return;
       }
-      content =
-        content
-          // Remove dead code from .js files on eject
-          .replace(
-            /\/\/ @remove-on-eject-begin([\s\S]*?)\/\/ @remove-on-eject-end/gm,
-            ''
-          )
-          // Remove dead code from .applescript files on eject
-          .replace(
-            /-- @remove-on-eject-begin([\s\S]*?)-- @remove-on-eject-end/gm,
-            ''
-          )
-          .trim() + '\n';
+      content = `${content
+        // Remove dead code from .js files on eject
+        .replace(
+          /\/\/ @remove-on-eject-begin([\s\S]*?)\/\/ @remove-on-eject-end/gm,
+          ''
+        )
+        // Remove dead code from .applescript files on eject
+        .replace(
+          /-- @remove-on-eject-begin([\s\S]*?)-- @remove-on-eject-end/gm,
+          ''
+        )
+        .trim()}\n`;
       console.log(`  Adding ${cyan(file.replace(ownPath, ''))} to the project`);
       fs.writeFileSync(file.replace(ownPath, appPath), content);
     });
@@ -185,7 +166,7 @@ inquirer
       console.log(`  Removing ${cyan(ownPackageName)} from dependencies`);
       delete appPackage.dependencies[ownPackageName];
     }
-    Object.keys(ownPackage.dependencies).forEach(key => {
+    Object.keys(ownPackage.dependencies).forEach((key) => {
       // For some reason optionalDependencies end up in dependencies after install
       if (ownPackage.optionalDependencies[key]) {
         return;
@@ -198,16 +179,16 @@ inquirer
     appPackage.dependencies = {};
     Object.keys(unsortedDependencies)
       .sort()
-      .forEach(key => {
+      .forEach((key) => {
         appPackage.dependencies[key] = unsortedDependencies[key];
       });
     console.log();
 
     console.log(cyan('Updating the scripts'));
-    delete appPackage.scripts['eject'];
-    Object.keys(appPackage.scripts).forEach(key => {
-      Object.keys(ownPackage.bin).forEach(binKey => {
-        const regex = new RegExp(binKey + ' (\\w+)', 'g');
+    delete appPackage.scripts.eject;
+    Object.keys(appPackage.scripts).forEach((key) => {
+      Object.keys(ownPackage.bin).forEach((binKey) => {
+        const regex = new RegExp(`${binKey} (\\w+)`, 'g');
         if (!regex.test(appPackage.scripts[key])) {
           return;
         }
@@ -215,11 +196,7 @@ inquirer
           regex,
           'node scripts/$1.js'
         );
-        console.log(
-          `  Replacing ${cyan(`"${binKey} ${key}"`)} with ${cyan(
-            `"node scripts/${key}.js"`
-          )}`
-        );
+        console.log(`  Replacing ${cyan(`"${binKey} ${key}"`)} with ${cyan(`"node scripts/${key}.js"`)}`);
       });
     });
 
@@ -278,7 +255,7 @@ inquirer
     if (ownPath.indexOf(appPath) === 0) {
       try {
         // remove react-scripts and react-scripts binaries from app node_modules
-        Object.keys(ownPackage.bin).forEach(binKey => {
+        Object.keys(ownPackage.bin).forEach((binKey) => {
           fs.removeSync(path.join(appPath, 'node_modules', '.bin', binKey));
         });
         fs.removeSync(ownPath);
@@ -331,9 +308,7 @@ inquirer
       console.log();
     }
 
-    console.log(
-      green('Please consider sharing why you ejected in this survey:')
-    );
+    console.log(green('Please consider sharing why you ejected in this survey:'));
     console.log(green('  http://goo.gl/forms/Bi6CZjk1EqsdelXk1'));
     console.log();
   });

@@ -16,7 +16,7 @@ process.env.PUBLIC_URL = '';
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
@@ -33,10 +33,10 @@ verifyTypeScriptSetup();
 // @remove-on-eject-end
 
 const jest = require('jest');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 let argv = process.argv.slice(2);
 
-function isInGitRepository() {
+function isInGitRepository () {
   try {
     execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
     return true;
@@ -45,7 +45,7 @@ function isInGitRepository() {
   }
 }
 
-function isInMercurialRepository() {
+function isInMercurialRepository () {
   try {
     execSync('hg --cwd . root', { stdio: 'ignore' });
     return true;
@@ -55,10 +55,7 @@ function isInMercurialRepository() {
 }
 
 // Watch unless on CI or explicitly running all tests
-if (
-  !process.env.CI &&
-  argv.indexOf('--watchAll') === -1
-) {
+if (!process.env.CI && argv.indexOf('--watchAll') === -1) {
   // https://github.com/facebook/create-react-app/issues/5210
   const hasSourceControl = isInGitRepository() || isInMercurialRepository();
   argv.push(hasSourceControl ? '--watch' : '--watchAll');
@@ -71,40 +68,32 @@ const path = require('path');
 const paths = require('../config/paths');
 argv.push(
   '--config',
-  JSON.stringify(
-    createJestConfig(
-      relativePath => path.resolve(__dirname, '..', relativePath),
-      path.resolve(paths.appSrc, '..'),
-      false
-    )
-  )
+  JSON.stringify(createJestConfig(
+    relativePath => path.resolve(__dirname, '..', relativePath),
+    path.resolve(paths.appSrc, '..'),
+    false
+  ))
 );
 
 // This is a very dirty workaround for https://github.com/facebook/jest/issues/5913.
 // We're trying to resolve the environment ourselves because Jest does it incorrectly.
 // TODO: remove this as soon as it's fixed in Jest.
 const resolve = require('resolve');
-function resolveJestDefaultEnvironment(name) {
-  const jestDir = path.dirname(
-    resolve.sync('jest', {
-      basedir: __dirname,
-    })
-  );
-  const jestCLIDir = path.dirname(
-    resolve.sync('jest-cli', {
-      basedir: jestDir,
-    })
-  );
-  const jestConfigDir = path.dirname(
-    resolve.sync('jest-config', {
-      basedir: jestCLIDir,
-    })
-  );
+function resolveJestDefaultEnvironment (name) {
+  const jestDir = path.dirname(resolve.sync('jest', {
+    basedir: __dirname,
+  }));
+  const jestCLIDir = path.dirname(resolve.sync('jest-cli', {
+    basedir: jestDir,
+  }));
+  const jestConfigDir = path.dirname(resolve.sync('jest-config', {
+    basedir: jestCLIDir,
+  }));
   return resolve.sync(name, {
     basedir: jestConfigDir,
   });
 }
-let cleanArgv = [];
+const cleanArgv = [];
 let env = 'jsdom';
 let next;
 do {

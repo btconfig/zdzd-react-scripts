@@ -15,7 +15,7 @@ process.env.NODE_ENV = 'production';
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
@@ -43,9 +43,8 @@ const printHostingInstructions = require('react-dev-utils/printHostingInstructio
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 const printBuildError = require('react-dev-utils/printBuildError');
 
-const measureFileSizesBeforeBuild =
-  FileSizeReporter.measureFileSizesBeforeBuild;
-const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
+const { measureFileSizesBeforeBuild } = FileSizeReporter;
+const { printFileSizesAfterBuild } = FileSizeReporter;
 const useYarn = fs.existsSync(paths.yarnLockFile);
 
 // These sizes are pretty large. We'll warn for bundles exceeding them.
@@ -71,7 +70,7 @@ checkBrowsers(paths.appPath, isInteractive)
     // This lets us display how much they changed later.
     return measureFileSizesBeforeBuild(paths.appBuild);
   })
-  .then(previousFileSizes => {
+  .then((previousFileSizes) => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
     fs.emptyDirSync(paths.appBuild);
@@ -85,16 +84,8 @@ checkBrowsers(paths.appPath, isInteractive)
       if (warnings.length) {
         console.log(chalk.yellow('Compiled with warnings.\n'));
         console.log(warnings.join('\n\n'));
-        console.log(
-          '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
-            ' to learn more about each warning.'
-        );
-        console.log(
-          'To ignore, add ' +
-            chalk.cyan('// eslint-disable-next-line') +
-            ' to the line before.\n'
-        );
+        console.log(`\nSearch for the ${chalk.underline(chalk.yellow('keywords'))} to learn more about each warning.`);
+        console.log(`To ignore, add ${chalk.cyan('// eslint-disable-next-line')} to the line before.\n`);
       } else {
         console.log(chalk.green('Compiled successfully.\n'));
       }
@@ -110,8 +101,8 @@ checkBrowsers(paths.appPath, isInteractive)
       console.log();
 
       const appPackage = require(paths.appPackageJson);
-      const publicUrl = paths.publicUrl;
-      const publicPath = config.output.publicPath;
+      const { publicUrl } = paths;
+      const { publicPath } = config.output;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
       printHostingInstructions(
         appPackage,
@@ -121,13 +112,13 @@ checkBrowsers(paths.appPath, isInteractive)
         useYarn
       );
     },
-    err => {
+    (err) => {
       console.log(chalk.red('Failed to compile.\n'));
       printBuildError(err);
       process.exit(1);
     }
   )
-  .catch(err => {
+  .catch((err) => {
     if (err && err.message) {
       console.log(err.message);
     }
@@ -135,16 +126,12 @@ checkBrowsers(paths.appPath, isInteractive)
   });
 
 // Create the production build and print the deployment instructions.
-function build(previousFileSizes) {
+function build (previousFileSizes) {
   // We used to support resolving modules according to `NODE_PATH`.
   // This now has been deprecated in favor of jsconfig/tsconfig.json
   // This lets you use absolute paths in imports inside large monorepos:
   if (process.env.NODE_PATH) {
-    console.log(
-      chalk.yellow(
-        'Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'
-      )
-    );
+    console.log(chalk.yellow('Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'));
     console.log();
   }
 
@@ -163,9 +150,7 @@ function build(previousFileSizes) {
           warnings: [],
         });
       } else {
-        messages = formatWebpackMessages(
-          stats.toJson({ all: false, warnings: true, errors: true })
-        );
+        messages = formatWebpackMessages(stats.toJson({ all: false, warnings: true, errors: true }));
       }
       if (messages.errors.length) {
         // Only keep the first error. Others are often indicative
@@ -181,12 +166,8 @@ function build(previousFileSizes) {
           process.env.CI.toLowerCase() !== 'false') &&
         messages.warnings.length
       ) {
-        console.log(
-          chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n'
-          )
-        );
+        console.log(chalk.yellow('\nTreating warnings as errors because process.env.CI = true.\n' +
+              'Most CI servers set it automatically.\n'));
         return reject(new Error(messages.warnings.join('\n\n')));
       }
 
@@ -199,7 +180,7 @@ function build(previousFileSizes) {
   });
 }
 
-function copyPublicFolder() {
+function copyPublicFolder () {
   fs.copySync(paths.appPublic, paths.appBuild, {
     dereference: true,
     filter: file => file !== paths.appHtml,

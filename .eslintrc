@@ -79,7 +79,6 @@
     "space-in-parens": "error",
     "array-bracket-spacing": ["error", "never"],
     "object-curly-spacing": ["error", "always"],
-    "max-len": ["error", { "code": 100, "comments": 80 }],
     "block-spacing": "error",
     "comma-spacing": "error",
     "computed-property-spacing": "error",
@@ -92,7 +91,7 @@
     "no-new-wrappers": "error",
     "radix": "error",
     "id-length": "off",
-    "camelcase": "error",
+    "camelcase": "warn",
     "new-cap": "error",
     "no-underscore-dangle": "error",
     "no-restricted-globals": [
@@ -103,6 +102,6 @@
       "isFinite"
     ],
     "no-compare-neg-zero": "error",
-    "no-console": "warn"
+    "no-console": "off"
   }
 }
