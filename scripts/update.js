@@ -17,6 +17,6 @@ const appPackage = require(paths.appPackageJson);
 Object.assign(appPackage, cc.getPackageConfig());
 
 // Copy the eslint configuration
-const eslintrcSrcPath = path.join(paths.ownPath, 'config/.eslintrc');
+const eslintrcSrcPath = path.join(paths.ownPath, 'config/eslint-config.json');
 const eslintrcDestPath = path.join(paths.appPath, '.eslintrc');
 cc.copyEslintConfig(eslintrcSrcPath, eslintrcDestPath);
