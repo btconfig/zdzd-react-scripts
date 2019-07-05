@@ -10,20 +10,21 @@
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('react-dev-utils/chalk');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
+const cc = require('./utils/commonConfig');
 
-function isInGitRepository() {
+function isInGitRepository () {
   try {
     execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
     return true;
@@ -32,7 +33,7 @@ function isInGitRepository() {
   }
 }
 
-function isInMercurialRepository() {
+function isInMercurialRepository () {
   try {
     execSync('hg --cwd . root', { stdio: 'ignore' });
     return true;
@@ -41,7 +42,7 @@ function isInMercurialRepository() {
   }
 }
 
-function tryGitInit(appPath) {
+function tryGitInit (appPath) {
   let didInit = false;
   try {
     execSync('git --version', { stdio: 'ignore' });
@@ -75,36 +76,24 @@ function tryGitInit(appPath) {
   }
 }
 
-module.exports = function(
+module.exports = function (
   appPath,
   appName,
   verbose,
   originalDirectory,
   template
 ) {
-  const ownPath = path.dirname(
-    require.resolve(path.join(__dirname, '..', 'package.json'))
-  );
+  const ownPath = path.dirname(require.resolve(path.join(__dirname, '..', 'package.json')));
   const appPackage = require(path.join(appPath, 'package.json'));
   const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
 
   // Copy over some of the devDependencies
   appPackage.dependencies = appPackage.dependencies || {};
 
-  const useTypeScript = appPackage.dependencies['typescript'] != null;
+  const useTypeScript = appPackage.dependencies.typescript != null;
 
   // Setup the script rules
-  appPackage.scripts = {
-    start: 'react-scripts start',
-    build: 'react-scripts build',
-    test: 'react-scripts test',
-    eject: 'react-scripts eject',
-  };
-
-  // Setup the eslint config
-  appPackage.eslintConfig = {
-    extends: 'react-app',
-  };
+  Object.assign(appPackage, cc.getPackageConfig());
 
   // Setup the browsers list
   appPackage.browserslist = defaultBrowsers;
@@ -123,20 +112,26 @@ module.exports = function(
   }
 
   // Copy the files for the user
-  const templatePath = template
-    ? path.resolve(originalDirectory, template)
-    : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
+  const templatePath = template ?
+    path.resolve(originalDirectory, template) :
+    path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
   if (fs.existsSync(templatePath)) {
     fs.copySync(templatePath, appPath);
   } else {
-    console.error(
-      `Could not locate supplied template: ${chalk.green(templatePath)}`
-    );
+    console.error(`Could not locate supplied template: ${chalk.green(templatePath)}`);
     return;
   }
 
-  // Rename gitignore after the fact to prevent npm from renaming it to .npmignore
-  // See: https://github.com/npm/npm/issues/1862
+  // Copy the eslint configuration
+  const eslintrcSrcPath = path.join(ownPath, 'config/eslint-config.json');
+  const eslintrcDestPath = path.join(appPath, '.eslintrc');
+  cc.copyEslintConfig(eslintrcSrcPath, eslintrcDestPath);
+
+  /**
+   * Rename gitignore after the fact to prevent npm
+   * from renaming it to .npmignore
+   * See: https://github.com/npm/npm/issues/1862
+   */
   try {
     fs.moveSync(
       path.join(appPath, 'gitignore'),
@@ -173,11 +168,9 @@ module.exports = function(
   );
   if (fs.existsSync(templateDependenciesPath)) {
     const templateDependencies = require(templateDependenciesPath).dependencies;
-    args = args.concat(
-      Object.keys(templateDependencies).map(key => {
-        return `${key}@${templateDependencies[key]}`;
-      })
-    );
+    args = args.concat(Object.keys(templateDependencies).map((key) => {
+      return `${key}@${templateDependencies[key]}`;
+    }));
     fs.unlinkSync(templateDependenciesPath);
   }
 
@@ -224,23 +217,15 @@ module.exports = function(
   console.log(chalk.cyan(`  ${displayedCommand} start`));
   console.log('    Starts the development server.');
   console.log();
-  console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}build`)
-  );
+  console.log(chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}build`));
   console.log('    Bundles the app into static files for production.');
   console.log();
   console.log(chalk.cyan(`  ${displayedCommand} test`));
   console.log('    Starts the test runner.');
   console.log();
-  console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`)
-  );
-  console.log(
-    '    Removes this tool and copies build dependencies, configuration files'
-  );
-  console.log(
-    '    and scripts into the app directory. If you do this, you can’t go back!'
-  );
+  console.log(chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`));
+  console.log('    Removes this tool and copies build dependencies, configuration files');
+  console.log('    and scripts into the app directory. If you do this, you can’t go back!');
   console.log();
   console.log('We suggest that you begin by typing:');
   console.log();
@@ -248,17 +233,13 @@ module.exports = function(
   console.log(`  ${chalk.cyan(`${displayedCommand} start`)}`);
   if (readmeExists) {
     console.log();
-    console.log(
-      chalk.yellow(
-        'You had a `README.md` file, we renamed it to `README.old.md`'
-      )
-    );
+    console.log(chalk.yellow('You had a `README.md` file, we renamed it to `README.old.md`'));
   }
   console.log();
   console.log('Happy hacking!');
 };
 
-function isReactInstalled(appPackage) {
+function isReactInstalled (appPackage) {
   const dependencies = appPackage.dependencies || {};
 
   return (
