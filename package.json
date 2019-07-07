@@ -23,7 +23,7 @@
     "utils"
   ],
   "bin": {
-    "react-scripts": "./bin/react-scripts.js"
+    "zdzd-react-scripts": "./bin/zdzd-react-scripts.js"
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {
