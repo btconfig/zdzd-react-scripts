@@ -27,11 +27,11 @@ const copyEslintConfig = (src, dest) => {
 };
 const getScriptsConfig = () => {
   return {
-    start: 'dzd-react-scripts start',
-    build: 'dzd-react-scripts build',
-    test: 'dzd-react-scripts test',
-    update: 'dzd-react-scipts update',
-    eject: 'dzd-react-scripts eject',
+    start: 'zdzd-react-scripts start',
+    build: 'zdzd-react-scripts build',
+    test: 'zdzd-react-scripts test',
+    update: 'zdzd-react-scipts update',
+    eject: 'zdzd-react-scripts eject',
   };
 };
 const getPackageConfig = () => {

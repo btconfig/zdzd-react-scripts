@@ -1,17 +1,17 @@
 {
-  "name": "@dzd/react-scripts",
+  "name": "@zdzd/react-scripts",
   "version": "0.1.1-alpha.0",
   "description": "Fork from https://github.com/facebook/create-react-app.git",
   "repository": {
     "type": "git",
-    "url": "https://github.com/btconfig/-dzd-react-scripts.git"
+    "url": "https://github.com/btconfig/zdzd-react-scripts.git"
   },
   "license": "MIT",
   "engines": {
     "node": ">=8.10"
   },
   "bugs": {
-    "url": "https://github.com/btconfig/-dzd-react-scripts/issues"
+    "url": "https://github.com/btconfig/zdzd-react-scripts/issues"
   },
   "files": [
     "bin",

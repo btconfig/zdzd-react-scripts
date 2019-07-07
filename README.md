@@ -1,4 +1,4 @@
-# @dzd/react-scripts
+# @zdzd/react-scripts
 
 This package forked from https://github.com/facebook/create-react-app.git
 
