@@ -361,7 +361,10 @@ module.exports = function (webpackEnv) {
                 ),
                 // @remove-on-eject-end
                 plugins: [
-                  require.resolve('@babel/plugin-proposal-decorators'),
+                  [
+                    require.resolve('@babel/plugin-proposal-decorators'),
+                    { legacy: true },
+                  ],
                   [
                     require.resolve('babel-plugin-named-asset-import'),
                     {
