@@ -1,2 +1,3 @@
-import { incrementAsync } from './example'
+import { incrementAsync } from './example';
 
+export { incrementAsync };
