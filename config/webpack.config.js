@@ -52,6 +52,7 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const lessRegex = /\.less$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -79,7 +80,7 @@ module.exports = function (webpackEnv) {
   const env = getClientEnvironment(publicUrl);
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, preProcessorOptions) => {
     const loaders = [
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
@@ -120,6 +121,7 @@ module.exports = function (webpackEnv) {
       loaders.push({
         loader: require.resolve(preProcessor),
         options: {
+          ...preProcessorOptions,
           sourceMap: isEnvProduction && shouldUseSourceMap,
         },
       });
@@ -136,6 +138,8 @@ module.exports = function (webpackEnv) {
     pkg.dependencies,
     'lodash'
   );
+  const themePath = path.resolve(paths.appSrc, 'theme.less');
+  const useTheme = path.existsSync(themePath);
 
   const sourceMap = shouldUseSourceMap ? 'source-map' : false;
 
@@ -381,7 +385,7 @@ module.exports = function (webpackEnv) {
                       libraryName: 'antd',
                       libraryDirectory: 'es',
                       // `style: true` for less
-                      style: 'css',
+                      style: true,
                     },
                   ],
                   useLodash && require.resolve('babel-plugin-lodash'),
@@ -494,6 +498,24 @@ module.exports = function (webpackEnv) {
                   getLocalIdent: getCSSModuleLocalIdent,
                 },
                 'sass-loader'
+              ),
+            },
+            {
+              test: lessRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                },
+                'less-loader',
+                useTheme ?
+                  {
+                    modifyVars: {
+                      hack: `true; @import ${themePath};`,
+                    },
+                    javascriptEnabled: true,
+                  } :
+                  {}
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
