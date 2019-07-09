@@ -1,11 +1,8 @@
-import { fromJS } from 'immutable';
+import { combineReducers } from 'redux'
+import example from './example'
 
-const initState = fromJS({});
+const reducers = combineReducers({
+    example,
+})
 
-function reducers (state = initState, action) {
-  switch (action.type) {
-    default:
-      return state;
-  }
-}
-export default reducers;
+export default reducers
