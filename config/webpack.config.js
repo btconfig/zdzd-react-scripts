@@ -511,7 +511,7 @@ module.exports = function (webpackEnv) {
                 useTheme ?
                   {
                     modifyVars: {
-                      hack: `true; @import ${themePath};`,
+                      hack: `true; @import '${themePath}';`,
                     },
                     javascriptEnabled: true,
                   } :
