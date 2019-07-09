@@ -9,13 +9,13 @@
 - [用户指南](https://facebook.github.io/create-react-app/) – 如何用Create React App来开发一个应用。
 
 
-# 特色配置
+## 特色配置
 1. antd的按需引入
 2. lodash的按需引入
 3. eslint配置
 4. husky + lint-stage，对提交代码做格式化和eslint检查
 
-# 集成模块
+## 集成模块
 1. redux、redux-saga
 2. react-router，v4
 
