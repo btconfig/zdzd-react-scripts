@@ -139,7 +139,7 @@ module.exports = function (webpackEnv) {
     'lodash'
   );
   const themePath = path.resolve(paths.appSrc, 'theme.less');
-  const useTheme = path.existsSync(themePath);
+  const useTheme = fs.existsSync(themePath);
 
   const sourceMap = shouldUseSourceMap ? 'source-map' : false;
 
