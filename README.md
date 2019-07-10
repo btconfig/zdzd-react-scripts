@@ -14,6 +14,7 @@
 2. lodash的按需引入
 3. eslint配置
 4. husky + lint-stage，对提交代码做格式化和eslint检查
+5. 可在package.json中配置resolve.alias
 
 ## 集成模块
 1. redux、redux-saga
