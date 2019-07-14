@@ -8,6 +8,11 @@
 - [开始指南](https://facebook.github.io/create-react-app/docs/getting-started) – 如何创建一个react应用。
 - [用户指南](https://facebook.github.io/create-react-app/) – 如何用Create React App来开发一个应用。
 
+## 快速构建
+```
+npm install create-react-app
+create-react-app xxx --scripts-version @zdzd/react-scripts
+```
 
 ## 特色配置
 1. antd的按需引入
@@ -19,4 +24,3 @@
 ## 集成模块
 1. redux、redux-saga
 2. react-router，v4
-
