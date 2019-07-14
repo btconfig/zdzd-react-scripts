@@ -52,7 +52,7 @@ function reducers(state = initState, action) {
 }
 ```
 
-3、对于异步action（例子中为SET_COUNT），我们希望在异步请求结束后再调用reducer（而非在发送action后立即调用reducer），所以reducer中不应该有此action。
+3、对于异步action（例子中为SET_COUNT），我们希望在异步请求结束后再调用reducer（而非在发送action后立即调用reducer），**所以reducer中不应该有此action**。
    同时应当将该action与期望执行的异步函数通过redux-saga进行绑定，这样saga监听到该action后，就会调用该异步函数。
 ```
 // src/stores/actions/example.js
