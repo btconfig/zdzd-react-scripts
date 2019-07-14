@@ -1,18 +1,17 @@
 import {put, call, takeLatest, takeEvery} from 'redux-saga/effects';
 
-// 同步action
+// action类型
 const SET_COUNT_SYNC = Symbol('set_count')
 const SET_COUNT = Symbol('set_count')
 
-// 异步action
+// 某些action绑定的异步请求
 function* getNewCount({payload, resolve, reject}) {
     const res = yield call(/*异步请求*/)
-    const tempResult = 20
     //异步请求结束后，可以发送同步action到reducer
     yield put({
         type: SET_COUNT_SYNC,
         payload:{
-            count:tempResult
+            count:res
         }
     });
     // 根据返回值，判断resolve或者reject
@@ -20,7 +19,8 @@ function* getNewCount({payload, resolve, reject}) {
     // reject()
 }
 
-// 默认导出需要监听的action（type字段），及监听到后的处理函数（字段asyncFunc）
+// 默认导出需要监听的action类型（即type字段），及监听到后的处理函数（字段asyncFunc）
+// 真正的监听在stores/index.js中实现
 export default [
     {
         effect:takeLatest,  //?????
