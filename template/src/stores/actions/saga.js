@@ -1,14 +1,11 @@
-import {put, call, takeLatest, takeEvery} from 'redux-saga/effects';
-import Example from './example'
+import Example from './example';
 
-const arrList = [
-    ...Example
-]
+const arrList = [...Example];
 
-function* rootSaga() {
-    for (const item of arrList) {
-        yield item.effect(item.type, item.asyncFunc)
-    }
+function* rootSaga () {
+  for (const item of arrList) {
+    yield item.effect(item.type, item.asyncFunc);
+  }
 }
 
-export default rootSaga
+export default rootSaga;
