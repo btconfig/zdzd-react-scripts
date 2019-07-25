@@ -11,7 +11,7 @@ const getHuskyConfig = () => {
 };
 const getLintStagedConfig = () => {
   return {
-    '*.{js,mjs,jsx,ts,tsx,md,css,html}': [
+    '*.{mjs,ts,tsx,md,css,html}': [
       'prettier --trailing-comma es5 --single-quote --write',
       'git add',
     ],
