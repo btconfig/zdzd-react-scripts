@@ -8,6 +8,8 @@ process.on('unhandledRejection', (err) => {
 });
 
 const path = require('path');
+const fs = require('fs-extra');
+const os = require('os');
 const paths = require('../config/paths');
 const cc = require('./utils/commonConfig');
 
@@ -15,6 +17,10 @@ const appPackage = require(paths.appPackageJson);
 
 // Setup the app package
 Object.assign(appPackage, cc.getPackageConfig());
+fs.writeFileSync(
+  paths.appPackageJson,
+  JSON.stringify(appPackage, null, 2) + os.EOL
+);
 
 // Copy the eslint configuration
 const eslintrcSrcPath = path.join(paths.ownPath, 'config/eslint-config.json');

@@ -30,7 +30,7 @@ const getScriptsConfig = () => {
     start: 'zdzd-react-scripts start',
     build: 'zdzd-react-scripts build',
     test: 'zdzd-react-scripts test',
-    update: 'zdzd-react-scipts update',
+    update: 'zdzd-react-scripts update',
     eject: 'zdzd-react-scripts eject',
   };
 };
