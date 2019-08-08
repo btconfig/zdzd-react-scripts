@@ -395,7 +395,7 @@ module.exports = function (webpackEnv) {
                       libraryName: 'antd',
                       libraryDirectory: 'es',
                       // `style: true` for less
-                      style: true,
+                      style: useTheme ? true : 'css',
                     },
                   ],
                   useLodash && require.resolve('babel-plugin-lodash'),
