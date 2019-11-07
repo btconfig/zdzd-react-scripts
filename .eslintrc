@@ -34,7 +34,6 @@
     "no-loop-func": "error",
     "prefer-rest-params": "error",
     "no-new-func": "error",
-    "space-before-function-paren": "error",
     "space-before-blocks": "error",
     "no-param-reassign": "error",
     "prefer-spread": "error",
