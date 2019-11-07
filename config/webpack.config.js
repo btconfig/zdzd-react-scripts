@@ -38,7 +38,7 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 const postcssNormalize = require('postcss-normalize');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP === 'ture';
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP === 'true';
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
@@ -423,6 +423,17 @@ module.exports = function (webpackEnv) {
                     { helpers: true },
                   ],
                 ],
+                plugins: [
+                  useAntd && [
+                    require.resolve('babel-plugin-import'),
+                    {
+                      libraryName: 'antd',
+                      libraryDirectory: 'es',
+                      // `style: true` for less
+                      style: useTheme ? true : 'css',
+                    },
+                  ],
+                ].filter(Boolean),
                 cacheDirectory: true,
                 cacheCompression: isEnvProduction,
                 // @remove-on-eject-begin
