@@ -1,6 +1,6 @@
 {
   "name": "@zdzd/react-scripts",
-  "version": "0.1.1-alpha.16",
+  "version": "0.1.1-alpha.17",
   "description": "Fork from https://github.com/facebook/create-react-app.git",
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "babel-preset-react-app": "^9.0.0",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "compression-webpack-plugin": "^3.0.0",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
