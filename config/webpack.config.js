@@ -693,7 +693,7 @@ module.exports = function(webpackEnv) {
           compressionOptions: {
             level: 9,
           },
-          threshold: 1024,
+          threshold: 10240,
           minRatio: 0.8,
           deleteOriginalAssets: false,
         }),
