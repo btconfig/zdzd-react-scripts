@@ -25,20 +25,10 @@ const copyEslintConfig = (src, dest) => {
   }
   fs.copySync(src, dest);
 };
-const getScriptsConfig = () => {
-  return {
-    start: 'zdzd-react-scripts start',
-    build: 'zdzd-react-scripts build',
-    test: 'zdzd-react-scripts test',
-    update: 'zdzd-react-scripts update',
-    eject: 'zdzd-react-scripts eject',
-  };
-};
 const getPackageConfig = () => {
   return {
     husky: getHuskyConfig(),
     'lint-staged': getLintStagedConfig(),
-    scripts: getScriptsConfig(),
   };
 };
 
