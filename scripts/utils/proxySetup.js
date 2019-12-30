@@ -24,7 +24,25 @@ const onProxyRes = proxyRes => {
 };
 
 const addProxyRes = proxyConfig => {
-  return { onProxyRes, ...proxyConfig };
+  const type = Object.prototype.toString.call(proxyConfig);
+  switch (type) {
+    case '[object Object]': {
+      const configPairs = Object.entries(proxyConfig).map(item => {
+        const [key, value] = item;
+        if (Object.prototype.toString.call(value) === '[object Object]') {
+          return [key, { onProxyRes, ...value }];
+        }
+        return item;
+      });
+      return Object.fromEntries(configPairs);
+    }
+    case '[object Array]':
+      return proxyConfig.map(config => {
+        return { onProxyRes, ...config };
+      });
+    default:
+      return proxyConfig;
+  }
 };
 
 module.exports = { addProxyRes };
