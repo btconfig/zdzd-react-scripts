@@ -9,7 +9,7 @@ const onProxyRes = proxyRes => {
         return cookie
           .split(';')
           .map(item => {
-            if (item.test(cookieRegex)) {
+            if (cookieRegex.test(item)) {
               return 'Domain=localhost';
             }
             return item;
