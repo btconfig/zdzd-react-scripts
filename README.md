@@ -10,9 +10,10 @@
 
 ## 快速构建
 
+由于新的 create-react-app 使用独立库来管理模版文件，导致本脚手架会支持行不通过，故初始化的时候需要指定 create-react-app 的版本为 3.0.0
+
 ```
-npm install create-react-app
-create-react-app xxx --scripts-version @zdzd/react-scripts
+npx create-react-app@3.0.0 xxx --scripts-version @zdzd/react-scripts
 ```
 
 ## 特色配置
