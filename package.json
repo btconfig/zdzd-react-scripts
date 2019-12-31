@@ -1,6 +1,6 @@
 {
   "name": "@zdzd/react-scripts",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Fork from https://github.com/facebook/create-react-app.git",
   "repository": {
     "type": "git",
