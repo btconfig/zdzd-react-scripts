@@ -1,5 +1,7 @@
 'use strict';
 
+require('./polyfills.js');
+
 const onProxyRes = proxyRes => {
   const cookies = proxyRes.headers['set-cookie'];
   const cookieRegex = /Domain=/i;
