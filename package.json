@@ -1,6 +1,6 @@
 {
   "name": "@zdzd/react-scripts",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Fork from https://github.com/facebook/create-react-app.git",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "@typescript-eslint/eslint-plugin": "1.6.0",
     "@typescript-eslint/parser": "1.6.0",
     "babel-eslint": "10.0.1",
-    "babel-jest": "24.8.0",
+    "babel-jest": "^24.8.0",
     "babel-loader": "8.0.5",
     "babel-plugin-import": "1.12.0",
     "babel-plugin-lodash": "3.3.4",
