@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.SessionMapper">
+
+    <resultMap id="sampleSessionItemMap" type="com.example.agent.infrastructure.tool.SampleSessionItem">
+        <id property="sessionId" column="session_id"/>
+        <result property="sessionDate" column="session_date"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <select id="sampleSessionsByKeywords" parameterType="map" resultMap="sampleSessionItemMap">
+        SELECT session_id, session_date, content
+        FROM session_table
+        WHERE session_date &gt;= #{startDateTime}
+          AND session_date &lt;= #{endDateTime}
+          AND (
+            <foreach collection="keywords" item="keyword" separator=" OR ">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </foreach>
+          )
+        LIMIT #{limit}
+    </select>
+</mapper>

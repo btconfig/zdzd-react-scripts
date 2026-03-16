@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.DslInstanceMapper">
+
+    <update id="updateByDslId" parameterType="map">
+        UPDATE dsl_instance
+        SET session_id = #{sessionId},
+            title = #{title},
+            status = #{status},
+            summary = #{summary},
+            output_json = #{outputJson},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE dsl_id = #{dslId}
+    </update>
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO dsl_instance(dsl_id, session_id, title, status, summary, output_json)
+        VALUES(#{dslId}, #{sessionId}, #{title}, #{status}, #{summary}, #{outputJson})
+    </insert>
+
+    <select id="findById" parameterType="string" resultType="map">
+        SELECT *
+        FROM dsl_instance
+        WHERE dsl_id = #{dslId}
+    </select>
+</mapper>

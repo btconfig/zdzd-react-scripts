@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.DslExecutionLogMapper">
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO dsl_execution_log(dsl_id, execution_id, status, output_json)
+        VALUES(#{dslId}, #{executionId}, #{status}, #{outputJson})
+    </insert>
+</mapper>

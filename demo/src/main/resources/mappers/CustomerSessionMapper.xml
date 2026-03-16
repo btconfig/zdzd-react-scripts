@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.CustomerSessionMapper">
+
+    <resultMap id="customerSessionRecordMap" type="com.example.agent.domain.model.CustomerSessionRecord">
+        <id property="id" column="id"/>
+        <result property="teamName" column="team_name"/>
+        <result property="myModelInfo" column="my_model_info"/>
+        <result property="queueId" column="queue_id"/>
+        <result property="agentId" column="agent_id"/>
+        <result property="bizType" column="biz_type"/>
+        <result property="groupId" column="group_id"/>
+        <result property="deviceIn" column="device_in"/>
+        <result property="bizTypeName" column="biz_type_name"/>
+        <result property="custUId" column="cust_u_id"/>
+        <result property="callSwitchInfos" column="call_switch_infos"/>
+        <result property="transferCount" column="transfer_count"/>
+        <result property="callType" column="call_type"/>
+        <result property="callerNo" column="caller_no"/>
+        <result property="modelInfo" column="model_info"/>
+        <result property="orgCalleeNo" column="org_callee_no"/>
+        <result property="callId" column="call_id"/>
+        <result property="calledNo" column="called_no"/>
+        <result property="totalCallTime" column="total_call_time"/>
+        <result property="agentName" column="agent_name"/>
+        <result property="diff" column="diff"/>
+        <result property="sessionTime" column="session_time"/>
+        <result property="groupName" column="group_name"/>
+        <result property="teamId" column="team_id"/>
+        <result property="dataSource" column="data_source"/>
+        <result property="callTime" column="call_time"/>
+        <result property="localCallId" column="local_call_id"/>
+        <result property="label" column="label"/>
+        <result property="logdate" column="logdate"/>
+        <result property="staffText" column="staff_text"/>
+        <result property="customerText" column="customer_text"/>
+        <result property="allText" column="all_text"/>
+    </resultMap>
+
+    <select id="query"
+            parameterType="com.example.agent.interfaces.rest.dto.CustomerSessionQueryRequest"
+            resultMap="customerSessionRecordMap">
+        SELECT id, team_name, my_model_info, queue_id, agent_id, biz_type, group_id, device_in, biz_type_name,
+               cust_u_id, call_switch_infos, transfer_count, call_type, caller_no, model_info, org_callee_no,
+               call_id, called_no, total_call_time, agent_name, diff, session_time, group_name, team_id,
+               data_source, call_time, local_call_id, label, logdate, staff_text, customer_text, all_text
+        FROM customer_service_sessions
+        WHERE 1 = 1
+        <if test="businessLine != null and businessLine.trim() != ''">
+            AND (biz_type_name = #{businessLine} OR biz_type = #{businessLine})
+        </if>
+        <if test="channel != null and channel.trim() != ''">
+            AND device_in = #{channel}
+        </if>
+        <if test="customerId != null and customerId.trim() != ''">
+            AND cust_u_id = #{customerId}
+        </if>
+        <if test="startTime != null and startTime.trim() != ''">
+            AND session_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime.trim() != ''">
+            AND session_time &lt;= #{endTime}
+        </if>
+        <if test="keywords != null and keywords.size() > 0">
+            AND (
+            <foreach collection="keywords" item="keyword" separator=" OR ">
+                (all_text LIKE CONCAT('%', #{keyword}, '%')
+                OR customer_text LIKE CONCAT('%', #{keyword}, '%')
+                OR staff_text LIKE CONCAT('%', #{keyword}, '%')
+                OR label LIKE CONCAT('%', #{keyword}, '%'))
+            </foreach>
+            )
+        </if>
+        ORDER BY session_time DESC, id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="queryAggregates" parameterType="map" resultType="map">
+        SELECT
+        <if test="groupBySelectSql != null and groupBySelectSql != ''">
+            ${groupBySelectSql},
+        </if>
+        ${aggregationSelectSql}
+        FROM customer_service_sessions
+        WHERE 1 = 1
+        <if test="businessLine != null and businessLine.trim() != ''">
+            AND (biz_type_name = #{businessLine} OR biz_type = #{businessLine})
+        </if>
+        <if test="channel != null and channel.trim() != ''">
+            AND device_in = #{channel}
+        </if>
+        <if test="customerId != null and customerId.trim() != ''">
+            AND cust_u_id = #{customerId}
+        </if>
+        <if test="startTime != null and startTime.trim() != ''">
+            AND session_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime.trim() != ''">
+            AND session_time &lt;= #{endTime}
+        </if>
+        <if test="keywords != null and keywords.size() > 0">
+            AND (
+            <foreach collection="keywords" item="keyword" separator=" OR ">
+                (all_text LIKE CONCAT('%', #{keyword}, '%')
+                OR customer_text LIKE CONCAT('%', #{keyword}, '%')
+                OR staff_text LIKE CONCAT('%', #{keyword}, '%')
+                OR label LIKE CONCAT('%', #{keyword}, '%'))
+            </foreach>
+            )
+        </if>
+        <if test="groupBySql != null and groupBySql != ''">
+            GROUP BY ${groupBySql}
+        </if>
+        ORDER BY ${orderBySql}
+        LIMIT #{limit}
+    </select>
+</mapper>

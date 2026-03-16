@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.ToolDefinitionMapper">
+
+    <select id="findAllEnabled" resultType="map">
+        SELECT *
+        FROM tool_definition
+        WHERE enabled = 1
+        ORDER BY tool_id ASC
+    </select>
+
+    <select id="findAll" resultType="map">
+        SELECT *
+        FROM tool_definition
+        ORDER BY tool_id ASC
+    </select>
+
+    <select id="findById" parameterType="string" resultType="map">
+        SELECT *
+        FROM tool_definition
+        WHERE tool_id = #{toolId}
+    </select>
+</mapper>

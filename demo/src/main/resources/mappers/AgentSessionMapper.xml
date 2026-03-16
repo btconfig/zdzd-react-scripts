@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.AgentSessionMapper">
+
+    <update id="updateBySessionId" parameterType="map">
+        UPDATE agent_session
+        SET status = #{status},
+            title = #{title},
+            query_text = #{query},
+            transcript_json = #{transcriptJson},
+            global_context_json = #{globalContextJson},
+            active_skill_ids_json = #{activeSkillIdsJson},
+            executed_steps_json = #{executedStepsJson},
+            latest_answer = #{latestAnswer},
+            latest_dsl_id = #{latestDslId},
+            waiting_external_job_id = #{waitingExternalJobId},
+            turn_count = #{turnCount},
+            last_error = #{lastError},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE session_id = #{sessionId}
+    </update>
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO agent_session(
+            session_id,
+            status,
+            title,
+            query_text,
+            transcript_json,
+            global_context_json,
+            active_skill_ids_json,
+            executed_steps_json,
+            latest_answer,
+            latest_dsl_id,
+            waiting_external_job_id,
+            turn_count,
+            last_error
+        )
+        VALUES(
+            #{sessionId},
+            #{status},
+            #{title},
+            #{query},
+            #{transcriptJson},
+            #{globalContextJson},
+            #{activeSkillIdsJson},
+            #{executedStepsJson},
+            #{latestAnswer},
+            #{latestDslId},
+            #{waitingExternalJobId},
+            #{turnCount},
+            #{lastError}
+        )
+    </insert>
+
+    <select id="findById" parameterType="string" resultType="map">
+        SELECT *
+        FROM agent_session
+        WHERE session_id = #{sessionId}
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.AsyncJobMapper">
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO async_job(
+            plan_instance_id,
+            node_id,
+            session_id,
+            turn_id,
+            tool_call_id,
+            external_job_id,
+            status,
+            callback_topic,
+            callback_url,
+            payload_json
+        )
+        VALUES(
+            #{planInstanceId},
+            #{nodeId},
+            #{sessionId},
+            #{turnId},
+            #{toolCallId},
+            #{externalJobId},
+            #{status},
+            #{callbackTopic},
+            #{callbackUrl},
+            #{payloadJson}
+        )
+    </insert>
+
+    <update id="updateStatusByExternalJobId" parameterType="map">
+        UPDATE async_job
+        SET status = #{status},
+            payload_json = #{payloadJson},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE external_job_id = #{externalJobId}
+    </update>
+
+    <select id="findByExternalJobId" parameterType="string" resultType="map">
+        SELECT *
+        FROM async_job
+        WHERE external_job_id = #{externalJobId}
+    </select>
+</mapper>

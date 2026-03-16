@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.SkillDefinitionMapper">
+
+    <select id="findAll" resultType="map">
+        SELECT *
+        FROM skill_definition
+        ORDER BY updated_at DESC, skill_id ASC
+    </select>
+
+    <select id="findById" parameterType="string" resultType="map">
+        SELECT *
+        FROM skill_definition
+        WHERE skill_id = #{skillId}
+    </select>
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO skill_definition(
+            skill_id,
+            name,
+            description,
+            enabled,
+            tool_ids_json,
+            prompt_markdown
+        )
+        VALUES(
+            #{skillId},
+            #{name},
+            #{description},
+            #{enabled},
+            #{toolIdsJson},
+            #{promptMarkdown}
+        )
+    </insert>
+
+    <update id="updateBySkillId" parameterType="map">
+        UPDATE skill_definition
+        SET name = #{name},
+            description = #{description},
+            enabled = #{enabled},
+            tool_ids_json = #{toolIdsJson},
+            prompt_markdown = #{promptMarkdown},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE skill_id = #{skillId}
+    </update>
+</mapper>

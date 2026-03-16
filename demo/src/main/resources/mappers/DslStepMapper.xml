@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.agent.infrastructure.mapper.DslStepMapper">
+
+    <update id="updateByDslStepId" parameterType="map">
+        UPDATE dsl_step
+        SET tool_name = #{toolName},
+            args_template_json = #{argsTemplateJson},
+            depends_on_json = #{dependsOnJson},
+            input_bindings_json = #{inputBindingsJson},
+            output_schema_json = #{outputSchemaJson}
+        WHERE dsl_id = #{dslId}
+          AND step_id = #{stepId}
+    </update>
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO dsl_step(
+            dsl_id,
+            step_id,
+            tool_name,
+            args_template_json,
+            depends_on_json,
+            input_bindings_json,
+            output_schema_json
+        )
+        VALUES(
+            #{dslId},
+            #{stepId},
+            #{toolName},
+            #{argsTemplateJson},
+            #{dependsOnJson},
+            #{inputBindingsJson},
+            #{outputSchemaJson}
+        )
+    </insert>
+
+    <select id="findByDslId" parameterType="string" resultType="map">
+        SELECT *
+        FROM dsl_step
+        WHERE dsl_id = #{dslId}
+        ORDER BY id ASC
+    </select>
+</mapper>

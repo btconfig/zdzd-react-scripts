@@ -1,0 +1,78 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/zy_agent_backend?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: wantsql8403
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+mybatis:
+  mapper-locations: classpath:/mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+agent:
+  runtime:
+    timezone: Asia/Shanghai
+
+llm:
+  provider: deepseek
+  # Switch provider/model/api-key here.
+  # DeepSeek example:
+  api-key: ${DEEPSEEK_API_KEY:}
+  base-url: https://api.deepseek.com/v1/chat/completions
+  model: deepseek-chat
+  # Qwen example:
+  # provider: qwen
+  # api-key: ${QWEN_API_KEY:}
+  # base-url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+  # model: qwen3-235b-a22b
+  routing:
+    enabled: true
+  context:
+    max-input-tokens: 24000
+    reserve-output-tokens: 4000
+    max-tool-message-chars: 4000
+    keep-recent-turns: 3
+
+central-planner:
+  deepseek:
+    api-key: ${llm.api-key}
+    base-url: ${llm.base-url}
+    model: ${llm.model}
+    temperature: 0.1
+    max-plan-retries: 3
+    retry-backoff-ms: 400
+
+tools:
+  base-url: http://localhost:8080
+  mock:
+    auto-callback-enabled: true
+    auto-callback-delay-ms: 300
+    callback-lookup-retries: 6
+    callback-lookup-sleep-ms: 120
+
+planner-gate:
+  task-fit-threshold: 0.75
+  confidence-threshold: 0.7
+
+step-loop:
+  enabled: true
+  max-iterations: 20
+  max-repair-per-step: 2
+  periodic-gate-interval: 3
+  semantic-critic-enabled: true
+  stop-confidence-threshold: 0.8
+  deepseek:
+    enabled: true
+    api-key: ${llm.api-key}
+    base-url: ${central-planner.deepseek.base-url}
+    model: ${central-planner.deepseek.model}
+    step-temperature: 0.1
+    patch-temperature: 0.1
+    max-retries: 2
+    retry-backoff-ms: 300
